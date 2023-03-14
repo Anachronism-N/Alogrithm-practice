@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int s = ratings.size(), ans = 0;
+        if(s == 1) return 1;
+        
+        // 先给每个孩子分配一颗糖果
+        vector<int> candies(s, 1);
+        // 从左向右进行初次遍历，将大于自己左孩子的节点糖果数更新为 左+1
+        for (int i = 1; i < s; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                candies[i] = candies[i - 1] + 1;
+            }
+        }
+        // 从右向左进行第二次遍历，还是更新糖果，但需要加入判断，因为若i的分数大于i+1，有可能此时i的糖果数已经大于i+1了，没必要再加一颗
+        ans += candies[s - 1];
+        for (int i = s - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                candies[i] = candies[i] > candies[i + 1] ? candies[i] : candies[i + 1] + 1;
+            }
+            ans += candies[i];
+        }
+        return ans;
+    }
+};
